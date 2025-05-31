@@ -11,8 +11,8 @@ namespace HRMS.API.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-    private readonly IMapper _mapper;
-        
+        private readonly IMapper _mapper;
+        private const int PageSize = 4;
 
         public EmployeeController(ApplicationDbContext context, IMapper mapper)
         {
@@ -20,13 +20,56 @@ namespace HRMS.API.Controllers
             _mapper = mapper;
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> GetAllEmployees()
+        public async Task<ActionResult<IEnumerable<EmployeeResponseDto>>> GetEmployees(
+            int? page,
+            string? searchTerm,
+            string? searchBy = "name"
+        )
         {
-            var employees = await _context.Employees.ToListAsync();
-            var employeesDto = _mapper.Map<List<EmployeeResponseDto>>(employees);
-            return Ok(employeesDto);
+            int pageNumber = page ?? 1;
+            var query = _context.Employees.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+                switch (searchBy.ToLower())
+                {
+                    case "firstname":
+                        query = query.Where(e => e.FirstName.ToLower().Contains(searchTerm));
+                        break;
+                    case "lastname":
+                        query = query.Where(e => e.LastName.ToLower().Contains(searchTerm));
+                        break;
+                    case "email":
+                        query = query.Where(e => e.Email.ToLower().Contains(searchTerm));
+                        break;
+                    case "phone":
+                        query = query.Where(e => e.PhoneNumber.ToLower().Contains(searchTerm));
+                        break;
+                    default:
+                        query = query.Where(e => e.FirstName.ToLower().Contains(searchTerm) || 
+                                            e.LastName.ToLower().Contains(searchTerm) ||
+                                            e.Email.ToLower().Contains(searchTerm) ||
+                                            e.PhoneNumber.ToLower().Contains(searchTerm));
+                        break;
+                }
+            }
+
+            var totalItems = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
+
+            var employees = await query
+                .Skip((pageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            Response.Headers.Add("X-Total-Count", totalItems.ToString());
+            Response.Headers.Add("X-Total-Pages", totalPages.ToString());
+            Response.Headers.Add("X-Current-Page", pageNumber.ToString());
+            Response.Headers.Add("X-Page-Size", PageSize.ToString());
+
+            return Ok(_mapper.Map<IEnumerable<EmployeeResponseDto>>(employees));
         }
 
         [HttpGet("{id}")]

@@ -141,3 +141,6 @@ C:\Users\ASUS\Desktop\HRMS\HRMS.API\obj\Debug\net9.0\refint\HRMS.API.dll
 C:\Users\ASUS\Desktop\HRMS\HRMS.API\obj\Debug\net9.0\HRMS.API.pdb
 C:\Users\ASUS\Desktop\HRMS\HRMS.API\obj\Debug\net9.0\HRMS.API.genruntimeconfig.cache
 C:\Users\ASUS\Desktop\HRMS\HRMS.API\obj\Debug\net9.0\ref\HRMS.API.dll
+C:\Users\ASUS\Desktop\HRMS\HRMS.API\bin\Debug\net9.0\PagedList.Core.dll
+C:\Users\ASUS\Desktop\HRMS\HRMS.API\bin\Debug\net9.0\PagedList.Core.Mvc.dll
+C:\Users\ASUS\Desktop\HRMS\HRMS.API\obj\Debug\net9.0\HRMS.API.sourcelink.json

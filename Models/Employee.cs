@@ -11,5 +11,8 @@ namespace HRMS.API.Models
         public string PhoneNumber { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; } = DateTime.Now;
         public DateTime HireDate { get; set; } = DateTime.Now;
+        // Navigation property
+        public Guid DepartmentId { get; set; }
+        public Department Department { get; set; } = null!;
     }
 }

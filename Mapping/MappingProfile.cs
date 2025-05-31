@@ -10,6 +10,8 @@ namespace HRMS.API.Mapping
         {
             CreateMap<EmployeeCreateDto, Employee>();
             CreateMap<Employee, EmployeeResponseDto>();
+            CreateMap<DepartmentCreateDto, Department>();
+            CreateMap<Department, DepartmentResponseDto>();
         }
     }
 

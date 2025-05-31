@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using HRMS.API.Models;
-
 namespace HRMS.API.Data.Configs
 {
     public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
@@ -29,6 +28,11 @@ namespace HRMS.API.Data.Configs
                 .IsRequired();
             builder.Property(e => e.HireDate)
                 .IsRequired();
+            builder.HasOne(e => e.Department)
+                .WithMany(e => e.Employees)
+                .HasForeignKey(e => e.DepartmentId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
+
     }
 } 
